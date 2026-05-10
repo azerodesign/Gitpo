@@ -18,7 +18,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gitpo-card/80 backdrop-blur-xl border-t border-gitpo-border pb-safe">
+    <nav className="fixed bottom-0 w-full max-w-md mx-auto left-1/2 -translate-x-1/2 z-50 bg-gitpo-card/90 backdrop-blur-xl border-t border-gitpo-border pb-safe">
       <div className="max-w-md mx-auto px-6 h-16 flex items-center justify-between">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname.startsWith(item.href);

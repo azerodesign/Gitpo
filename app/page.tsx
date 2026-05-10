@@ -1,10 +1,45 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { Github, Code2, LineChart, Rocket, Zap, ArrowRight, Activity, GitCommit, GitPullRequest, GitMerge } from 'lucide-react';
+import { Github, Code2, LineChart, Rocket, Activity, GitCommit, GitPullRequest } from 'lucide-react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { loginWithGithub, loginWithPat } from './actions';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 export default function LandingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  const [showDevFallback, setShowDevFallback] = useState(false);
+  const [patToken, setPatToken] = useState('');
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/dashboard');
+    }
+  }, [status, router]);
+
+  const handleLogin = async () => {
+    await loginWithGithub();
+  };
+
+  const handleDevLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (patToken.trim()) {
+      await loginWithPat(patToken);
+    }
+  };
+
+  if (status === 'loading' || status === 'authenticated') {
+    return (
+      <div className="min-h-screen bg-gitpo-bg flex flex-col items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gitpo-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gitpo-bg overflow-x-hidden selection:bg-gitpo-primary/30">
       {/* Background Atmosphere */}
@@ -23,16 +58,13 @@ export default function LandingPage() {
             <span className="font-semibold text-xl tracking-tight">Gitpo</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm font-medium text-gitpo-text-secondary hover:text-white transition-colors">
-              Preview App
-            </Link>
-            <Link 
-              href="/dashboard"
-              className="group relative inline-flex items-center gap-2 justify-center px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-gitpo-card border border-gitpo-border rounded-full hover:bg-gitpo-bg-secondary hover:border-gitpo-border-hover focus:outline-none focus:ring-2 focus:ring-gitpo-primary focus:ring-offset-2 focus:ring-offset-gitpo-bg"
+            <button 
+              onClick={handleLogin}
+              className="group relative inline-flex items-center gap-2 justify-center px-4 py-2 text-sm font-medium text-white transition-all duration-200 bg-gitpo-card border border-gitpo-border rounded-lg hover:bg-gitpo-bg-secondary hover:border-gitpo-border-hover focus:outline-none focus:ring-2 focus:ring-gitpo-primary focus:ring-offset-2 focus:ring-offset-gitpo-bg"
             >
               <Github className="w-4 h-4" />
               <span>Login</span>
-            </Link>
+            </button>
           </div>
         </nav>
 
@@ -72,13 +104,42 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
-            <Link 
-              href="/dashboard"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-medium text-white transition-all duration-200 bg-gitpo-primary rounded-full hover:bg-gitpo-primary/90 focus:outline-none focus:ring-2 focus:ring-gitpo-primary focus:ring-offset-2 focus:ring-offset-gitpo-bg w-full sm:w-auto hover:scale-105 active:scale-95"
+            <button 
+              onClick={handleLogin}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium text-white transition-all duration-200 bg-gitpo-primary rounded-lg hover:bg-gitpo-primary/90 focus:outline-none focus:ring-2 focus:ring-gitpo-primary focus:ring-offset-2 focus:ring-offset-gitpo-bg w-full sm:w-auto hover:scale-105 active:scale-95"
             >
               <Github className="w-5 h-5" />
               <span>Continue with GitHub</span>
-            </Link>
+            </button>
+          </motion.div>
+          
+          {/* Developer Fallback Toggle */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="mt-6 flex flex-col items-center gap-3"
+          >
+             <button 
+                onClick={() => setShowDevFallback(!showDevFallback)}
+                className="text-xs text-gitpo-text-secondary hover:text-white transition-colors underline underline-offset-2"
+             >
+                Developer Preview Access
+             </button>
+             {showDevFallback && (
+                <form onSubmit={handleDevLogin} className="flex items-center gap-2 max-w-xs w-full bg-gitpo-card p-2 rounded-lg border border-gitpo-border animate-in fade-in slide-in-from-top-4">
+                   <input 
+                      type="password" 
+                      value={patToken}
+                      onChange={(e) => setPatToken(e.target.value)}
+                      placeholder="GitHub PAT (Development Only)" 
+                      className="flex-1 bg-transparent text-sm text-white px-2 py-1 outline-none placeholder:text-gitpo-text-secondary"
+                   />
+                   <button type="submit" className="px-3 py-1.5 bg-gitpo-primary text-white text-xs font-semibold rounded-md">
+                      Login
+                   </button>
+                </form>
+             )}
           </motion.div>
         </section>
 
@@ -86,7 +147,7 @@ export default function LandingPage() {
         <motion.section 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
           className="relative mx-auto max-w-lg mb-32"
         >
           {/* Mobile phone mock */}
@@ -216,13 +277,13 @@ export default function LandingPage() {
           <p className="text-gitpo-text-secondary mb-8 max-w-md mx-auto relative z-10">
             Join thousands of developers managing their GitHub workload directly from their mobile devices.
           </p>
-          <Link 
-            href="/dashboard"
-            className="inline-flex relative z-10 items-center justify-center gap-2 px-8 py-4 text-sm font-medium text-white transition-all duration-200 bg-gitpo-primary rounded-full hover:bg-gitpo-primary/90 hover:scale-105 active:scale-95"
+          <button 
+            onClick={handleLogin}
+            className="inline-flex relative z-10 items-center justify-center gap-2 px-6 py-3 text-sm font-medium text-white transition-all duration-200 bg-gitpo-primary rounded-lg hover:bg-gitpo-primary/90 hover:scale-105 active:scale-95"
           >
             <Github className="w-5 h-5" />
             <span>Login with GitHub</span>
-          </Link>
+          </button>
         </section>
         
         <footer className="mt-20 pt-8 border-t border-gitpo-border text-center text-sm text-gitpo-text-secondary">

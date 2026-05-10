@@ -5,7 +5,7 @@ import { Share, Plus, ChevronLeft, Download } from 'lucide-react';
 import Link from 'next/link';
 import { use } from 'react';
 
-export default function ReleasesPage({ params }: { params: Promise<{ repo: string }> }) {
+export default function ReleasesPage({ params }: { params: Promise<{ repo: string, owner: string }> }) {
   const resolvedParams = use(params);
 
   return (
@@ -13,7 +13,7 @@ export default function ReleasesPage({ params }: { params: Promise<{ repo: strin
       <header className="sticky top-0 z-40 bg-gitpo-bg/80 backdrop-blur-xl border-b border-gitpo-border px-6 pt-safe pb-4">
         <div className="flex justify-between items-center mt-2">
           <div className="flex items-center gap-3">
-             <Link href={`/repositories/${resolvedParams.repo}`} className="w-8 h-8 rounded-full border border-gitpo-border flex items-center justify-center hover:bg-gitpo-card transition-colors">
+             <Link href={`/repositories/${resolvedParams.owner}/${resolvedParams.repo}`} className="w-8 h-8 rounded-full border border-gitpo-border flex items-center justify-center hover:bg-gitpo-card transition-colors">
                 <ChevronLeft className="w-4 h-4" />
              </Link>
              <h1 className="font-semibold text-lg tracking-tight">Releases</h1>
@@ -21,7 +21,7 @@ export default function ReleasesPage({ params }: { params: Promise<{ repo: strin
         </div>
       </header>
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 md:p-6 space-y-4 md:space-y-6">
         <div className="space-y-4">
            {[{
               version: "v1.2.0", type: "Latest", title: "Mobile UI Polish", time: "2 hours ago"
@@ -47,11 +47,11 @@ function ReleaseCard({ version, type, title, time }: { version: string, type: st
   const isLatest = type === 'Latest';
   
   return (
-    <div className="p-5 rounded-3xl bg-gitpo-card border border-gitpo-border hover:border-gitpo-border-hover transition-colors">
+    <div className="p-4 rounded-2xl bg-gitpo-card border border-gitpo-border hover:border-gitpo-border-hover transition-colors">
        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
              <span className="font-mono text-sm font-semibold">{version}</span>
-             <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border ${isLatest ? 'bg-gitpo-success/10 text-gitpo-success border-gitpo-success/30' : 'bg-gitpo-bg text-gitpo-text-secondary border-gitpo-border'}`}>{type}</span>
+             <span className={`text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded border ${isLatest ? 'bg-gitpo-success/10 text-gitpo-success border-gitpo-success/30' : 'bg-gitpo-bg text-gitpo-text-secondary border-gitpo-border'}`}>{type}</span>
           </div>
           <span className="text-xs text-gitpo-text-secondary">{time}</span>
        </div>

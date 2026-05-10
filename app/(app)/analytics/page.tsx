@@ -17,7 +17,7 @@ export default function Analytics() {
   return (
     <>
       <Header title="Analytics" />
-      <div className="p-6 space-y-8">
+      <div className="p-4 md:p-6 space-y-6">
         
         {/* Main Growth Graph */}
         <section className="space-y-4">
@@ -26,7 +26,7 @@ export default function Analytics() {
              <p className="text-sm text-gitpo-text-secondary">Combined stars across all public repositories</p>
            </div>
            
-           <div className="h-[250px] w-full p-4 rounded-3xl bg-gitpo-card border border-gitpo-border">
+           <div className="h-[220px] w-full p-3 md:p-4 rounded-2xl bg-gitpo-card border border-gitpo-border">
              <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                   <defs>
@@ -55,7 +55,7 @@ export default function Analytics() {
              <p className="text-sm text-gitpo-text-secondary">Total commits per month</p>
            </div>
            
-           <div className="h-[250px] w-full p-4 rounded-3xl bg-gitpo-card border border-gitpo-border">
+           <div className="h-[220px] w-full p-3 md:p-4 rounded-2xl bg-gitpo-card border border-gitpo-border">
              <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(243,244,246,0.1)" vertical={false} />

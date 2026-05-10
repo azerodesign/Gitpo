@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "Gitpo",
+  "description": "Mobile-first GitHub control center for managing repositories on the go.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
