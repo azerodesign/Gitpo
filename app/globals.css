@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: "Inter", "Geist", system-ui, sans-serif;
+
+  --color-gitpo-bg: #0A0F1F;
+  --color-gitpo-bg-secondary: #111827;
+  --color-gitpo-card: #162033;
+  
+  --color-gitpo-primary: #2563EB;
+  --color-gitpo-secondary: #22D3EE;
+  
+  --color-gitpo-text: #F3F4F6;
+  --color-gitpo-text-secondary: #94A3B8;
+  
+  --color-gitpo-success: #22C55E;
+  --color-gitpo-danger: #EF4444;
+
+  --color-gitpo-border: rgba(243, 244, 246, 0.1);
+  --color-gitpo-border-hover: rgba(243, 244, 246, 0.2);
+}
+
+@layer base {
+  body {
+    @apply bg-gitpo-bg text-gitpo-text font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 16px);
+  }
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
